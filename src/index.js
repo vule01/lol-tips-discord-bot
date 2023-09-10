@@ -1,6 +1,7 @@
 require('dotenv').config();
-
 const { Client, IntentsBitField } = require('discord.js');
+const { registerCommands } = require('./register-commands');
+const { getLore } = require('./get-champion-info');
 
 const client = new Client({
     intents: [
@@ -12,17 +13,18 @@ const client = new Client({
 });
 
 client.on('ready', (c) => {
-    console.log(`${c.user.tag} is online.`)
-});
+    console.log(`${c.user.tag} is online`);
+    registerCommands();
+})
 
-client.on('messageCreate', (message) => {
-    if(message.author.bot) {
-        return;
-    }
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
 
-    if(message.content === 'hello'){
-        message.reply('hello');
+    if (interaction.commandName === 'lore') {
+        const championName = interaction.options.get('champion-name').value;
+        const lore = await getLore(championName);
+        interaction.reply(lore);
     }
-});
+})
 
 client.login(process.env.BOT_TOKEN);
