@@ -14,6 +14,32 @@ const commands = [
             }
         ]
     },
+    {
+        name: 'play',
+        description: 'Get a tip for playing the champion',
+        options: [
+            {
+                name: 'champion-name',
+                description: 'The name of the champion.',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ]
+        
+    },
+    {
+        name: 'versus',
+        description: 'Get a tip for playing against the champion',
+        options: [
+            {
+                name: 'champion-name',
+                description: 'The name of the champion.',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ]
+        
+    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
