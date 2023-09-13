@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
 const { registerCommands } = require('./register-commands');
-const { getLore } = require('./get-champion-info');
+const { getLore, getTips } = require('./get-champion-info');
 
 const client = new Client({
     intents: [
@@ -20,11 +20,17 @@ client.on('ready', (c) => {
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'lore') {
-        const championName = interaction.options.get('champion-name').value;
-        const lore = await getLore(championName);
-        interaction.reply(lore);
+    const championName = interaction.options.get('champion-name').value;
+    
+    let response;
+    if (interaction.commandName === 'lore') {        
+        response = await getLore(championName);
+    } else if (interaction.commandName === 'play') {
+        response = await getTips(championName, true);
+    } else if (interaction.commandName === 'versus') {
+        response = await getTips(championName, false);
     }
+    interaction.reply(response);
 })
 
 client.login(process.env.BOT_TOKEN);
